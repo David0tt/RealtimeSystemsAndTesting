@@ -1,3 +1,6 @@
+# Realtime Systems and Testing
+In this document I provide some notes on how to set up realtime or lowlatency systems, in particular for robot arms. Further i describe a minimal setup for testing them.
+
 # Realtime Systems
 For many applications, realtime systems are required. These are systems that meet their timing constraints reliably under expected and worst-case conditions. 
 
