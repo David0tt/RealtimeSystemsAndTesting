@@ -26,7 +26,8 @@ In the following, the commands to install a lowlatency system for control of a P
 
 ```bash
 # low-latency kernel
-sudo apt install linux-lowlatency-6.11
+# sudo apt install linux-lowlatency-6.11
+sudo apt install linux-lowlatency-6.14
 
 # NVIDIA Drivers: (following https://docs.nvidia.com/datacenter/tesla/driver-installation-guide/index.html -> Ubuntu -> Network Repository Installation)
 sudo apt install linux-headers-$(uname -r)
