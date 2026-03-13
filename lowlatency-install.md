@@ -1,12 +1,13 @@
 The following script describes the commands to install a lowlatency system, which for example can be used to control a Franka Emika Panda robot arm with all control functionality being containerized in docker containers. 
 
-Dockerfiles for this can be found in https://github.com/David0tt/RobotReplicationDockerfiles
+Dockerfiles for this can be found in https://github.com/David0tt/ThesisInformation
 
 
 ```bash
 # low-latency kernel
 # sudo apt install linux-lowlatency-6.11
-sudo apt install linux-lowlatency-6.14
+# sudo apt install linux-lowlatency-6.14
+sudo apt install linux-lowlatency-6.17
 
 # NVIDIA Drivers: (following https://docs.nvidia.com/datacenter/tesla/driver-installation-guide/index.html -> Ubuntu -> Network Repository Installation)
 sudo apt install linux-headers-$(uname -r)
@@ -15,7 +16,13 @@ export arch="x86_64"
 wget https://developer.download.nvidia.com/compute/cuda/repos/$distro/$arch/cuda-keyring_1.1-1_all.deb
 sudo dpkg -i cuda-keyring_1.1-1_all.deb
 sudo apt update
+# It is recommended to pin the driver to a specific version, so on normal system update no newer nvidia driver versions will be installed, which often can lead to broken systems
+sudo apt install nvidia-driver-pinning-590
 sudo apt install nvidia-open
+
+# Install CUDA (following https://developer.nvidia.com/cuda-13-1-0-download-archive?target_os=Linux&target_arch=x86_64&Distribution=Ubuntu&target_version=24.04&target_type=deb_network)
+# (or select a different version)
+sudo apt-get -y install cuda-toolkit-13-1
 
 # Install Docker (following https://docs.docker.com/engine/install/ubuntu/)
 # Add Docker's official GPG key:
