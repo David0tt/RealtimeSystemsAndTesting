@@ -17,10 +17,8 @@ wget https://developer.download.nvidia.com/compute/cuda/repos/$distro/$arch/cuda
 sudo dpkg -i cuda-keyring_1.1-1_all.deb
 sudo apt update
 # It is recommended to pin the driver to a specific version, so on normal system update no newer nvidia driver versions will be installed, which often can lead to broken systems
-# sudo apt install nvidia-driver-pinning-590
-# sudo apt install nvidia-open
-# For the 595 driver the driver pinning did not work, so we install it manually:
-sudo apt install nvidia-driver-595-open
+sudo apt install nvidia-driver-pinning-595
+sudo apt install nvidia-open
 
 # Install CUDA (following https://developer.nvidia.com/cuda-13-1-0-download-archive?target_os=Linux&target_arch=x86_64&Distribution=Ubuntu&target_version=24.04&target_type=deb_network)
 # (or select a different version)
