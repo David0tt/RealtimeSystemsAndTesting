@@ -7,7 +7,8 @@ Dockerfiles for this can be found in https://github.com/David0tt/ThesisInformati
 # low-latency kernel
 # sudo apt install linux-lowlatency-6.11
 # sudo apt install linux-lowlatency-6.14
-sudo apt install linux-lowlatency-6.17
+# sudo apt install linux-lowlatency-6.17
+sudo apt install linux-lowlatency-7.0
 
 # NVIDIA Drivers: (following https://docs.nvidia.com/datacenter/tesla/driver-installation-guide/index.html -> Ubuntu -> Network Repository Installation)
 sudo apt install linux-headers-$(uname -r)
