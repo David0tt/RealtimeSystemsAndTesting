@@ -88,3 +88,36 @@ network:
 
 sudo netplan apply 
 ```
+
+
+# NVIDIA Driver uninstall
+It can often be required to fully cleanly uninstall the nvidia drivers before reinstalling the nvidia driver. Follow roughly the following instructions:
+
+```bash
+# Check what's currently installed
+dpkg -l | grep -i nvidia
+nvidia-smi
+
+# Remove all NVIDIA packages
+sudo apt remove --purge '^nvidia-.*' -y
+sudo apt remove --purge '^libnvidia-.*' -y
+sudo apt remove --purge '^cuda-.*' -y        # if CUDA is installed
+sudo apt remove --purge '^libcuda.*' -y      # if CUDA libs present
+
+# Remove leftover config and dependencies
+sudo apt autoremove -y
+sudo apt autoclean
+
+# Check, that everything is removed:
+dpkg -l | grep -i nvidia
+
+# reboot
+sudo reboot
+
+# Verify
+dpkg -l | grep -i nvidia      # should show nothing
+nvidia-smi                    # should return "command not found"
+```
+
+
+
