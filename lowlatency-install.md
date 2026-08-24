@@ -71,6 +71,9 @@ sudo systemctl restart docker
 # Users that want to use Docker should be added to the docker group
 # sudo adduser ott docker
 
+
+# Network setup (Optional)
+# This network setup is pecific to our setup, where the PC has a second network card, which is connected to the control box of a Franka Emika Panda robot
 # Set up the network configuration (IP: 172.16.0.1 on the second network card which is connected to the Panda)
 ifconfig # to show all the network interfaces, find the one that you want, in this case `enp11s0`
 # Add the IP address to the network config by editing
@@ -90,7 +93,7 @@ sudo netplan apply
 ```
 
 
-# NVIDIA Driver uninstall
+# Cleanly uninstall NVIDIA Driver
 It can often be required to fully cleanly uninstall the nvidia drivers before reinstalling the nvidia driver. Follow roughly the following instructions:
 
 ```bash
@@ -119,6 +122,63 @@ dpkg -l | grep -i nvidia      # should show nothing
 nvidia-smi                    # should return "command not found"
 
 # NVIDIA drivers are now cleanly fully uninstalled, you can now install new following the instructions above
+```
+
+# Cleanly Uninstall kernels
+Over the course of running such a system for longer times, it can happen that multiple kernels get installed. This can be annoying, since for installations with dkms builds, dkms modules for all these kernels need to be built. Also, for a clean unified system it also makes sense to only have the kernels installed which are actually used. Here are instructions to uninstall kernels:
+
+```bash
+# See installed stuff  and list status of kernel modules managed by DKMS
+sudo dkms status                      # show status of kernel modules managed by DKMS
+uname -a                              # show the currently active kernel (sanity check)
+
+dpkg --list | grep linux-image        # show installed kernel packages
+dpkg --list | grep linux-headers      # show all kernel headers packages installed
+dpkg --list | grep linux-lowlatency   # show lowlatency linux kernel packages (which might not be needed anymore)
+dpkg --list | grep linux-modules   # show installed linux kernel modules
+
+# remove all the kernel packages not wanted anymore, found from the `dkms --list` commands above e.g.:
+sudo apt purge linux-image-6.11.0-1016-lowlatency linux-image-6.14.0-37-generic linux-image-lowlatency-6.11 linux-image-generic-6.14 linux-headers-6.11.0-1016-lowlatency linux-headers-6.11.0-29-generic linux-headers-6.14.0-37-generic linux-lowlatency-hwe-6.11-headers-6.11.0-1016 linux-lowlatency-hwe-6.11-tools-6.11.0-1016
+
+# Remove leftover config and dependencies
+sudo apt autoremove --purge
+sudo apt autoclean
+
+# Check in the following directories if there are any remnants of uninstalled kernels
+ls /usr/src/
+ls /lib/modules/
+# If so, remove them, e.g.
+# sudo rm -rf /usr/src/*6.11*
+# sudo rm -rf /lib/modules/6.11.0-29-generic
+
+# Check, if everything unwanted is removed:
+dpkg --list | grep linux-image
+dpkg --list | grep linux-headers
+dpkg --list | grep linux-lowlatency
+dpkg --list | grep linux-modules
+sudo dkms status
+# if `sudo dkms status` still shows something, you can further investigate, e.g. with 
+# dpkg --list | grep 6.11 # e.g. if some kernel 6.11 still exists, show all packages with 6.11
+
+# If `sudo dkms status` still reports some registered kernel modules, even after all corresponding dpkg packages are removed, e.g.:
+# 
+#        (base) ott@panda3gpu5090:~$ sudo dkms status
+#        nvidia/595.91.07, 6.11.0-29-generic, x86_64: installed (Differences between built and installed modules)
+#        nvidia/595.91.07, 7.0.0-30-generic, x86_64: installed
+# 
+# Normally, these should have been automatically removed, you can manually remove them with e.g.
+# sudo dkms remove nvidia/595.91.07 -k 6.11.0-29-generic
+
+
+# update initramfs and grub
+sudo update-initramfs -u -k all
+sudo update-grub
+
+reboot
+
+# Final check
+sudo dkms status
+uname -r
 
 ```
 
