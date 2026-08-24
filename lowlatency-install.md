@@ -117,6 +117,9 @@ sudo reboot
 # Verify
 dpkg -l | grep -i nvidia      # should show nothing
 nvidia-smi                    # should return "command not found"
+
+# NVIDIA drivers are now cleanly fully uninstalled, you can now install new following the instructions above
+
 ```
 
 
